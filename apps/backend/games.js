@@ -8,10 +8,20 @@ const createGame = (playerA, playerB) => {
             o: playerB
         },
         board: getNewBoard(),
-        turn: "x"
+        turn: "x",
+        state: "running",
+        winner: null
     }
     games[game.id] = game;
     return game
+}
+
+const getGame = (gameId) => {
+    return games[gameId]
+}
+
+const removeGame = (gameId) => {
+    delete games[gameId]
 }
 
 const getNewBoard = () => {
@@ -23,5 +33,7 @@ const getNewBoard = () => {
 }
 
 module.exports = {
-    createGame
+    createGame,
+    getGame,
+    removeGame
 }
