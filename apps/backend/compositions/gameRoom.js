@@ -1,5 +1,5 @@
-const { getGame } = require('../games')
-const { getPlayerSocket } = require('../players-sockets')
+const { getGame, resetGame } = require('../games')
+const { getPlayerSocket, emitToPlayer } = require('../players-sockets')
 
 
 function useGameRoom(player) {
@@ -12,6 +12,7 @@ function useGameRoom(player) {
 
     socket.on('request-status', sendStatus)
     socket.on('move', ({i, j}) => {
+        if (game.status !== 'running') {return}
         if (game.players[game.turn] !== player.id) {
             return
         }
@@ -21,9 +22,27 @@ function useGameRoom(player) {
         }
 
         game.board[i][j] = game.turn
-        game.turn = game.turn === "x" ? "o" : "x"
+
+        const {status, winner} = getGameStatus(game)
+        game.status = status
+        game.winner = game.players[winner] || null
+
+        if (status === 'running') {
+            game.turn = game.turn === "x" ? "o" : "x"
+        }
 
 
+    })
+    socket.on('restart', () => {
+        if (game.restarted.includes(player.id) ) {
+            return
+        }
+        game.restarted.push(player.id);
+        if (game.restarted.length === 2) {
+            resetGame(game.id);
+            emitToPlayer(game.players.x, 'status', game);
+            emitToPlayer(game.players.o, 'status', game);
+        }
     })
 }
 

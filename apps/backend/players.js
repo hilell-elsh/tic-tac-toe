@@ -6,7 +6,7 @@ const getPlayer = (playerId) => {
     return players[playerId]
 }
 
-const createPlayer = (nickname, connectionOption) => {
+const createPlayer = ({nickname, connectionOption}) => {
     const newId = (Buffer.from(Math.random().toString()+nickname)).toString("base64")
     players[newId] = {
         id: newId,
@@ -14,6 +14,7 @@ const createPlayer = (nickname, connectionOption) => {
         connectionOption,
         status: 'wait'
     }
+    return players[newId]
 }
 
 const removePlayer = (playerId) => {

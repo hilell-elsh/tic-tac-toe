@@ -9,8 +9,9 @@ const createGame = (playerA, playerB) => {
         },
         board: getNewBoard(),
         turn: "x",
-        state: "running",
-        winner: null
+        status: "running",
+        winner: null,
+        restarted: []
     }
     games[game.id] = game;
     return game
@@ -32,8 +33,19 @@ const getNewBoard = () => {
     ]
 }
 
+const resetGame = (gameId) => {
+    const game = getGame(gameId);
+    Object.assign(game, {
+        board: getNewBoard(),
+        restarted: [],
+        winner: null,
+        status: 'running'
+    })
+}
+
 module.exports = {
     createGame,
     getGame,
-    removeGame
+    removeGame,
+    resetGame
 }

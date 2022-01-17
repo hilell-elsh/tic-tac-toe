@@ -1,13 +1,16 @@
-const router = require('express').Router()
+const express = require('express')
+const router = express.Router()
 const {createPlayer} = require('./players')
 
-const noop = (req, res) => {
+const enterGame = (req, res) => {
+    const player = createPlayer(req.body)
     res
         .status(200)
+        .json(player)
         .end();
 }
 
 router
-    .post('/api/enter', noop)
+    .post('/api/enter', express.json(), enterGame)
 
 module.exports = router
